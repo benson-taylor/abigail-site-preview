@@ -16,7 +16,7 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const NAV = [['Podcast', 'podcast.html'], ['Shop', 'shop.html'], ['Members', 'members.html'], ['About', 'index.html#about']];
 const home = document.body.classList.contains('home');
 // Inner pages only ever appear in a modal over the world, even from a direct link.
-if (!home && !embedded) location.replace(`index.html?m=${encodeURIComponent(location.pathname.split('/').pop() + location.search + location.hash)}`);
+if (!home && !embedded) location.replace(`./?m=${encodeURIComponent(location.pathname.split('/').pop().replace(/(\.html)?$/, '.html') + location.search + location.hash)}`);
 $('[data-nav]').outerHTML = `<header class="nav">
   <a class="logo" href="index.html"><img src="assets/logo/logo-stacked-dark.svg" alt="A Brighter Humanity, home" width="1000" height="300"></a>
   <a class="btn btn-small nav-btn" href="podcast.html"><span class="lg">Listen now</span><span class="sm">Listen</span></a>
@@ -273,6 +273,7 @@ function initPageModal() {
   document.body.append(shell);
   renderBag();
   const frame = $('iframe', shell);
+  const homePath = location.pathname.replace(/[^/]*$/, '');
   const card = $('.page-modal-card', shell);
   let lastFocus = null, hideTimer = 0, opening = false, pushed = false;
   // The card rises straight away; its page fades in the moment the page says it's ready.
@@ -297,7 +298,9 @@ function initPageModal() {
     requestAnimationFrame(() => requestAnimationFrame(() => shell.classList.add('on', 'ready')));
     dispatchEvent(new CustomEvent('abh-modal', { detail: true }));
     pushed = push;
-    if (push) history.pushState({ modal: href }, '', `?m=${encodeURIComponent(href)}`);
+    // Clean addresses: /privacy rather than a query string. The host serves privacy.html there, which comes straight back here.
+    const pretty = `${homePath}${href.replace('.html', '')}`;
+    if (push) history.pushState({ modal: href }, '', pretty); else history.replaceState({ modal: href }, '', pretty);
     card.focus({ preventScroll: true });
   };
   const close = (fromHistory = false, hash = '') => {
@@ -307,7 +310,7 @@ function initPageModal() {
     dispatchEvent(new CustomEvent('abh-modal', { detail: false }));
     hideTimer = setTimeout(() => { shell.hidden = true; setFrame('about:blank'); }, 280);
     // Closing undoes the step that opened it, so Back never reopens a modal you've just shut.
-    if (!fromHistory) { if (pushed && !hash) history.back(); else history.pushState({}, '', location.pathname + (hash ? `#${hash}` : '')); }
+    if (!fromHistory) { if (pushed && !hash) history.back(); else history.pushState({}, '', homePath + (hash ? `#${hash}` : '')); }
     pushed = false;
     if (hash) document.getElementById(hash)?.scrollIntoView();
     lastFocus?.focus?.({ preventScroll: true });

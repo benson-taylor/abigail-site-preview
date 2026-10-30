@@ -1434,3 +1434,60 @@ html.embed,html.embed body{overscroll-behavior:contain}
   .home .members .perks{padding-inline:30vw}
   .theme-grid>*,.ep-row>*,.home .shop-strip>*,.home .members .perks>*{margin-inline:-5vw;position:relative}
 }
+
+/* Phone header: the logo is the statement, as wide as the controls allow on any phone */
+@media (max-width:640px){
+  :root{--logo-w:min(calc(100vw - 164px),300px);--nav-h:calc(var(--logo-w)*var(--logo-ratio,.3) + 20px)}
+  .nav,.home .nav{padding:10px 14px;gap:8px}
+  .logo img{width:var(--logo-w);height:auto;max-width:none}
+  .bag-btn{padding:4px 6px;flex:none}
+  .post-btn{width:40px;height:40px}
+  .post-menu{right:0}
+  .story-pic{margin-top:calc(var(--nav-h) + 12px)}
+  .home .morning,.home .themes,.home .listen,.home .shop-hero,.home .members{padding-top:calc(var(--nav-h) + 14px)}
+}
+
+@media (max-width:640px){
+  /* Reading Room: captions never overlap, so these cards sit side by side */
+  .home .members .perks{padding-inline:21vw}
+  .home .members .perks>*{flex-basis:58vw;margin-inline:0}
+  .rr-win{width:86%;margin-inline:auto}
+  .rr-label p{font-size:.86rem}
+  /* The sun's words stay on two lines on small phones */
+  .sunbutton{width:max(112px,30vw);height:max(112px,30vw);font-size:.92rem}
+}
+@media (max-width:640px){
+  .home .members .perks h3{margin-inline:auto}
+  .sun-face{font-size:.8rem;line-height:1.1}
+}
+@media (max-width:640px){.sunbutton{flex:none;aspect-ratio:1;padding:0}.sun-face{width:66%;height:66%;aspect-ratio:1}}
+
+/* Short phones only: each section still fits one screen */
+@media (max-width:640px) and (max-height:760px){
+  .home .story{display:block;padding:0}
+  .story-pic{float:left;width:36vw;margin:calc(var(--nav-h) + 12px) 14px 8px 16px}
+  .story-copy{padding:calc(var(--nav-h) + 12px) 16px 20px}
+  .story-copy h2{font-size:clamp(1.45rem,7vw,1.8rem)}
+  .story-copy p.story-key{font-size:1rem;clear:both;padding-top:6px}
+  .story-btns{clear:both}
+  .story-btns .btn{padding:.7em 1.1em;font-size:.92rem}
+
+  .morning-inner{display:grid;grid-template-columns:1fr auto;gap:4px 12px;text-align:left;align-items:center}
+  .morning-inner .eyebrow{grid-column:1/-1;justify-self:start;margin:0 0 4px}
+  .morning-inner h2{grid-column:1;margin:0;font-size:clamp(1.6rem,7.6vw,2rem)}
+  .sunbutton{grid-column:2;grid-row:2;width:92px;height:92px;margin:0}
+  .sun-face{font-size:.68rem;box-shadow:0 0 0 8px rgba(255,209,92,.28),0 0 0 15px rgba(255,209,92,.14)}
+  .morning-sub{grid-column:1/-1;font-size:.92rem;line-height:1.35;margin:6px 0 0}
+  .mantra{grid-column:1/-1}
+  .morning-grid{gap:12px}
+  .daily-card{padding:14px}
+  .daily-card h3{font-size:1.35rem}
+  .daily-card .signup{margin:.5em 0}
+
+  .members-copy p:not(.eyebrow){display:none}
+  .members-copy h2{margin-bottom:.3em}
+  .rr-sign{width:min(62%,230px)}
+  .rr-win{width:72%}
+  .rr-wall{padding-bottom:30px}
+}
+@media (max-width:640px) and (max-height:760px){.story-copy h2{display:flow-root}}
