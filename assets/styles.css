@@ -1399,9 +1399,9 @@ html.embed,html.embed body{overscroll-behavior:contain}
   }
 }
 @keyframes deck{
-  0%{scale:.84;translate:26% 0;rotate:4deg;z-index:1;filter:brightness(.96)}
-  50%{scale:1;translate:0 0;rotate:0deg;z-index:3;filter:none}
-  100%{scale:.84;translate:-26% 0;rotate:-4deg;z-index:1;filter:brightness(.96)}
+  0%{scale:.86;rotate:4deg;z-index:1}
+  50%{scale:1;rotate:0deg;z-index:3}
+  100%{scale:.86;rotate:-4deg;z-index:1}
 }
 
 @media (max-width:640px){
@@ -1427,4 +1427,11 @@ html.embed,html.embed body{overscroll-behavior:contain}
   .home .members .perks>*{flex-basis:50vw}
   .rr-sign{width:min(70%,280px);margin-bottom:-14px}
   .members-copy p:not(.eyebrow){font-size:.96rem;line-height:1.4;margin-bottom:.5em}
+}
+
+/* The deck overlaps by spacing, not by moving cards, because a moving card would drag its own snap point with it */
+@media (max-width:640px){
+  .theme-grid,.ep-row,.home .shop-strip{padding-inline:17vw}
+  .home .members .perks{padding-inline:30vw}
+  .theme-grid>*,.ep-row>*,.home .shop-strip>*,.home .members .perks>*{margin-inline:-5vw;position:relative}
 }
