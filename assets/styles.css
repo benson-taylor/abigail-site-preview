@@ -765,7 +765,6 @@ h2 em,h1 em,h3 em{font-family:var(--serif);font-weight:500;letter-spacing:-.01em
 .page-close:active{transform:scale(.94)}
 @media (hover:hover) and (pointer:fine){.page-close:hover{transform:rotate(90deg)}}
 .page-modal-bar .bag-btn{box-shadow:0 2px 10px rgba(23,56,46,.25)}
-.modal-open,.modal-open body{overflow:hidden}
 .scrim{z-index:66}.drawer{z-index:70}
 .embed .nav,.embed .foot,.embed .skip{display:none}
 .embed .inner main{padding-top:0}
@@ -1209,7 +1208,6 @@ html:has(.legal){scroll-behavior:smooth}
 
 
 /* ---------- Modal motion: the scrim fades on its own, and a solid card rises over it once its page is ready ---------- */
-html:has(body.home){scrollbar-gutter:stable}
 .page-modal,.page-modal.on{background:none;opacity:1;transform:none;transition:none}
 .page-modal::before{content:"";position:absolute;inset:0;background:rgba(214,240,222,.82);opacity:0;transition:opacity 260ms ease}
 .page-modal.on::before{opacity:1}
@@ -1300,3 +1298,133 @@ html:has(body.home){scrollbar-gutter:stable}
 /* About: the photo sits beside the words rather than filling the screen */
 .story-pic{width:min(76%,70svh);height:auto;aspect-ratio:850/880;margin:96px 0 24px}
 @media (max-width:980px){.story-pic{width:min(70%,340px);height:auto;margin:84px auto 0}}
+
+
+/* The modal rises at once; its page fades in as soon as it's ready. Scrolling inside never drags the page behind. */
+.page-modal.on.ready .page-modal-card{transition:transform 340ms cubic-bezier(0.32,0.72,0,1)}
+.page-modal-card{transition:transform 220ms cubic-bezier(0.32,0.72,0,1)}
+.page-modal iframe{opacity:0;transition:opacity 140ms ease}
+.page-modal.loaded iframe{opacity:1}
+html.embed,html.embed body{overscroll-behavior:contain}
+
+
+/* =====================================================================
+   PHONE. Not the desktop squeezed: the camera follows her story, cards are a deck, signs fill the screen.
+   ===================================================================== */
+.post-menu a:last-child{display:none}
+@media (max-width:640px){
+  /* Top bar: logo, bag, signpost. Everything else lives on the signs. */
+  .home .nav,.nav{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(244,251,236,.92);padding:8px 14px;gap:10px}
+  .nav .nav-btn{display:none}
+  .logo img{height:34px}
+  .bag-btn .bag-word{display:none}
+
+  /* The signs, in the middle of the screen, either side of one post */
+  .post-btn{position:relative;z-index:3}
+  .post-menu,.post.open .post-menu{position:fixed;inset:0;right:0;top:0;z-index:2;display:grid;grid-auto-rows:min-content;align-content:center;justify-items:stretch;gap:10px;padding:0;border:0;border-radius:0;background:rgba(214,240,222,.97)}
+  .post-menu::before{content:"";position:absolute;left:50%;top:50%;width:8px;height:min(74svh,520px);margin:0 0 0 -4px;translate:0 -50%;border-radius:4px 4px 0 0;background:#8A4B24}
+  .post-menu a,.post-menu a:last-child{display:block;position:relative;width:calc(50% + 2px);min-width:0;padding:.95em 1em .95em 1.6em;font-size:clamp(.92rem,4.3vw,1.1rem);text-align:right;box-sizing:border-box;clip-path:polygon(18px 0,100% 0,100% 100%,18px 100%,0 50%);transform-origin:100% 50%}
+  .post-menu a:nth-child(even){justify-self:end;text-align:left;padding:.95em 1.6em .95em 1em;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 50%,calc(100% - 18px) 100%,0 100%);transform-origin:0 50%}
+  .post-menu a{transform:scaleX(.3)}
+
+  /* The hero: the camera moves through the world and follows her */
+  .hero,.home .hero{height:100svh;min-height:0;padding:0;overflow:clip}
+  .hero .stage{position:absolute;left:0;bottom:0;flex:none;margin:0;height:76svh;width:calc(76svh * 1600 / 760);animation:phone-camera 26s ease-in-out infinite;will-change:transform}
+  .is-paused .stage{animation-play-state:paused}
+  .scene-toggle{left:14px;bottom:14px}
+
+  /* Cards are a deck: swipe, and each folds in behind the next */
+  .theme-grid,.ep-row,.home .shop-strip,.home .members .perks{display:flex;gap:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;margin-inline:-16px;padding:14px 12vw 22px;width:auto;max-width:none;flex:none;-webkit-overflow-scrolling:touch}
+  .theme-grid::-webkit-scrollbar,.ep-row::-webkit-scrollbar,.home .shop-strip::-webkit-scrollbar,.home .members .perks::-webkit-scrollbar{display:none}
+  .theme-grid>*,.ep-row>*,.home .shop-strip>*,.home .members .perks>*{flex:0 0 76vw;scroll-snap-align:center;min-width:0;box-sizing:border-box}
+  .has-scroll .theme-grid>.reveal,.has-scroll .home .shop-strip>.reveal,.has-scroll .shop-strip>.reveal{opacity:1;transform:none;transition:none}
+
+  .tile,.tile:nth-child(even){display:grid;grid-template-columns:1fr;grid-template-rows:42vw auto;min-height:0;border-radius:22px}
+  .tile-text{padding:14px 18px 18px;justify-content:flex-start}
+  .tile::after{display:none}
+  .ep-row .ep{display:block;padding:12px;border-radius:22px}
+  .ep-row .ep-art{min-height:0;border-radius:14px}
+  .ep-row .ep-faces{padding:26px 0 10px}
+  .strip-info{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px}
+  .strip-item img{aspect-ratio:1}
+  .home .shop-strip .btn{white-space:nowrap}
+  .listen-head .btn{display:none}
+  .home .members{align-content:start;gap:12px}
+  .members-copy .btn{margin-top:.2em}
+  .rr-sign{margin:4px auto -22px;width:min(82%,330px)}
+  .rr-wall{padding-bottom:40px}
+  .home .members .perks{align-items:start}
+  .rr-bay a{display:block}
+  .rr-win{height:auto;width:100%}
+  .rr-label{display:block;padding:12px 4px 0;text-align:center}
+  .rr-label h3{margin-inline:auto}
+
+  /* About: photo first, then the words, on one screen */
+  .story-pic{width:min(56%,44svh,240px);margin:72px auto 0}
+  .story-copy{padding:18px 20px 28px}
+  .story-copy h2{font-size:clamp(1.8rem,8vw,2.3rem)}
+  .story-copy p:not(.eyebrow){font-size:.96rem;line-height:1.4;margin-bottom:.6em}
+  .story-copy p.story-key{font-size:1.1rem}
+
+  /* Morning */
+  .morning{padding-top:68px}
+  .morning-grid{gap:18px}
+  .sunbutton{width:min(36vw,150px);height:min(36vw,150px);margin-block:14px}
+  .daily-card{padding:18px}
+
+  /* Footer lists fold away */
+  .foot-grid{grid-template-columns:1fr;gap:0}
+  .foot-brand{margin-bottom:14px}
+  .foot nav{border-top:1px solid rgba(255,246,230,.2);padding:12px 0;gap:0}
+  .foot nav h4{display:flex;justify-content:space-between;margin:0;cursor:pointer}
+  .foot nav h4::after{content:"+";font-weight:400;transition:rotate 180ms ease}
+  .foot nav.fold-open h4::after{rotate:45deg}
+  .foot nav a{display:none}
+  .foot nav.fold-open a{display:block;padding:8px 0}
+  .foot nav.fold-open h4{margin-bottom:6px}
+  .foot-pay{margin-top:6px}
+}
+@keyframes phone-camera{
+  0%{transform:translateX(calc(-49% + 50vw))}
+  26%{transform:translateX(calc(-49% + 50vw))}
+  38%,50%{transform:translateX(0)}
+  60%{transform:translateX(calc(-36% + 50vw))}
+  90%{transform:translateX(calc(-62% + 50vw))}
+  100%{transform:translateX(calc(-49% + 50vw))}
+}
+@media (max-width:640px) and (prefers-reduced-motion:reduce){.hero .stage{animation:none;transform:translateX(calc(-49% + 50vw))}}
+@supports (animation-timeline:view()){
+  @media (max-width:640px) and (prefers-reduced-motion:no-preference){
+    .theme-grid>*,.ep-row>*,.home .shop-strip>*,.home .members .perks>*{animation:deck linear both;animation-timeline:view(inline)}
+  }
+}
+@keyframes deck{
+  0%{scale:.84;translate:26% 0;rotate:4deg;z-index:1;filter:brightness(.96)}
+  50%{scale:1;translate:0 0;rotate:0deg;z-index:3;filter:none}
+  100%{scale:.84;translate:-26% 0;rotate:-4deg;z-index:1;filter:brightness(.96)}
+}
+
+@media (max-width:640px){
+  .veil,.world-sun{display:none}
+  /* Signs that stand out against a plain, calm screen */
+  .post-menu,.post.open .post-menu{background:#F4FBEC}
+  .post-menu a:nth-child(n+1){--b:#FFD15C}
+  .post-menu a:nth-child(2){--b:#F2B37E}
+  .post-menu a:nth-child(3){--b:#8FCFA8}
+  .post-menu a:nth-child(4){--b:#BBB2E6}
+  .post-menu a:nth-child(5){--b:#E8A6BE}
+  .post-menu a:nth-child(6){--b:#A8BCE3}
+  /* Footer: the + sits at the far edge */
+  .foot nav{justify-content:stretch;justify-items:stretch}
+  .foot nav h4{width:100%}
+  /* Each section fits a screen: the longer words live in the modals */
+  .story-copy>p:not(.eyebrow):not(.story-key){display:none}
+  .story-pic{width:min(62%,38svh,250px)}
+  .daily-card .envelope,.daily-card>p:not(.form-note){display:none}
+  .sunbutton{width:min(30vw,120px);height:min(30vw,120px);margin-block:10px}
+  .morning-sub{margin-bottom:0}
+  .home .members .perks{padding-inline:25vw}
+  .home .members .perks>*{flex-basis:50vw}
+  .rr-sign{width:min(70%,280px);margin-bottom:-14px}
+  .members-copy p:not(.eyebrow){font-size:.96rem;line-height:1.4;margin-bottom:.5em}
+}

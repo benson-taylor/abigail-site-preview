@@ -22,7 +22,7 @@ $('[data-nav]').outerHTML = `<header class="nav">
   <a class="btn btn-small nav-btn" href="podcast.html"><span class="lg">Listen now</span><span class="sm">Listen</span></a>
   <a class="btn btn-small btn-rose nav-btn" href="index.html#morning"><span class="lg">Today’s mantra, please</span><span class="sm">Mantra</span></a>
   <button class="bag-btn" type="button" data-open-bag aria-label="Open your bag"><svg class="bag-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 8h14l1 13H4zM9 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="bag-word">Bag</span><b class="bag-count" data-bag-count>0</b></button>
-  <div class="post"><button class="post-btn" type="button" aria-expanded="false" aria-controls="post-menu" aria-label="Menu"><svg viewBox="0 0 28 28" width="24" height="24" aria-hidden="true"><path d="M14 3v23" stroke="#8A4B24" stroke-width="3" stroke-linecap="round"/><path d="M6 6h13l4 3.5-4 3.5H6z" fill="#D81F5F"/><path d="M22 14H9l-4 3.5L9 21h13z" fill="#FFD15C"/></svg></button><nav class="post-menu" id="post-menu" aria-label="Main">${[...NAV, ['Sign in', 'account.html']].map(([t, u], i) => `<a href="${u}" style="--i:${i}">${t}</a>`).join('')}</nav></div>
+  <div class="post"><button class="post-btn" type="button" aria-expanded="false" aria-controls="post-menu" aria-label="Menu"><svg viewBox="0 0 28 28" width="24" height="24" aria-hidden="true"><path d="M14 3v23" stroke="#8A4B24" stroke-width="3" stroke-linecap="round"/><path d="M6 6h13l4 3.5-4 3.5H6z" fill="#D81F5F"/><path d="M22 14H9l-4 3.5L9 21h13z" fill="#FFD15C"/></svg></button><nav class="post-menu" id="post-menu" aria-label="Main">${[...NAV, ['Sign in', 'account.html'], ['Today’s mantra', 'index.html#morning']].map(([t, u], i) => `<a href="${u}" style="--i:${i}">${t}</a>`).join('')}</nav></div>
 </header>
 <aside class="drawer" data-bag hidden aria-label="Your bag"></aside><div class="scrim" data-scrim hidden></div>`;
 
@@ -232,7 +232,9 @@ if (!home) $$('.reveal').forEach((el) => el.classList.add('in'));
   const post = $('.post'), btn = $('.post-btn');
   const set = (on) => { post.classList.toggle('open', on); btn.setAttribute('aria-expanded', on); };
   btn.addEventListener('click', () => set(!post.classList.contains('open')));
-  $('.post-menu').addEventListener('click', (e) => { if (e.target.closest('a')) set(false); });
+  // On phones the signs fill the screen: tapping any sign or the space around them closes it.
+  $('.post-menu').addEventListener('click', () => set(false));
+  $('.post-menu').addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
   document.addEventListener('click', (e) => { if (!post.contains(e.target)) set(false); });
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && post.classList.contains('open')) { set(false); btn.focus(); } });
 }
@@ -248,6 +250,17 @@ if (embedded) {
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && drawer.hidden) parent.postMessage({ abh: 'close' }, location.origin); });
 }
 
+// ----- Home: links to the home page move within it, and never reload it -----
+if (home) document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href]');
+  const m = a?.getAttribute('href').match(/^(?:index\.html)?(#.*)?$/);
+  if (!m || a.hasAttribute('data-link')) return;
+  e.preventDefault();
+  const target = m[1] && m[1].length > 1 ? document.querySelector(m[1]) : null;
+  if (target) target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+  else if (!m[1]) scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+});
+
 // ----- Home: everything else opens over the page, so you never leave -----
 const MODAL_PAGES = /^(about|podcast|shop|members|account|checkout|terms|privacy)\.html/;
 function initPageModal() {
@@ -261,29 +274,27 @@ function initPageModal() {
   renderBag();
   const frame = $('iframe', shell);
   const card = $('.page-modal-card', shell);
-  let lastFocus = null, hideTimer = 0, readyTimer = 0, opening = false, pushed = false;
-  // The card only rises once its page has loaded, so nothing ghosts through or pops in.
-  const showCard = () => { clearTimeout(readyTimer); if (opening) shell.classList.add('ready'); };
+  let lastFocus = null, hideTimer = 0, opening = false, pushed = false;
+  // The card rises straight away; its page fades in the moment the page says it's ready.
   // Changing the page by replace() keeps the iframe out of the Back button's history.
   const setFrame = (href) => { if (frame.contentWindow) frame.contentWindow.location.replace(href); else frame.src = href; };
-  frame.addEventListener('load', () => {
+  const pageReady = () => {
     const path = frame.contentWindow?.location.pathname || '';
     if (path === 'blank') return;
     // The bag is only offered where you can shop.
     shell.classList.toggle('shopping', /\/(shop|checkout)\.html$/.test(path));
-    showCard();
-  });
+    shell.classList.add('loaded');
+  };
+  frame.addEventListener('load', pageReady);
   const open = (href, push = true) => {
     clearTimeout(hideTimer);
     lastFocus = document.activeElement;
     closeBag();
     opening = true;
-    shell.classList.remove('ready');
+    shell.classList.remove('ready', 'loaded', 'shopping');
     shell.hidden = false;
     setFrame(href);
-    document.documentElement.classList.add('modal-open');
-    requestAnimationFrame(() => requestAnimationFrame(() => shell.classList.add('on')));
-    readyTimer = setTimeout(showCard, 700);
+    requestAnimationFrame(() => requestAnimationFrame(() => shell.classList.add('on', 'ready')));
     dispatchEvent(new CustomEvent('abh-modal', { detail: true }));
     pushed = push;
     if (push) history.pushState({ modal: href }, '', `?m=${encodeURIComponent(href)}`);
@@ -292,9 +303,7 @@ function initPageModal() {
   const close = (fromHistory = false, hash = '') => {
     if (shell.hidden || !opening) return;
     opening = false;
-    clearTimeout(readyTimer);
-    shell.classList.remove('on', 'ready');
-    document.documentElement.classList.remove('modal-open');
+    shell.classList.remove('on', 'ready', 'loaded');
     dispatchEvent(new CustomEvent('abh-modal', { detail: false }));
     hideTimer = setTimeout(() => { shell.hidden = true; setFrame('about:blank'); }, 280);
     // Closing undoes the step that opened it, so Back never reopens a modal you've just shut.
@@ -303,6 +312,14 @@ function initPageModal() {
     if (hash) document.getElementById(hash)?.scrollIntoView();
     lastFocus?.focus?.({ preventScroll: true });
   };
+  // The page behind stays exactly where it is: scrolling over the scrim simply does nothing.
+  const stay = (e) => e.preventDefault();
+  shell.addEventListener('wheel', stay, { passive: false });
+  shell.addEventListener('touchmove', stay, { passive: false });
+  addEventListener('keydown', (e) => { if (!shell.hidden && [' ', 'PageUp', 'PageDown', 'Home', 'End', 'ArrowUp', 'ArrowDown'].includes(e.key) && e.target === card) e.preventDefault(); });
+  // Fetch every page while the browser's idle, so modals open instantly.
+  const idle = window.requestIdleCallback || ((f) => setTimeout(f, 1200));
+  idle(() => ['about', 'podcast', 'shop', 'members', 'terms', 'privacy', 'checkout', 'account'].forEach((n) => { const l = document.createElement('link'); l.rel = 'prefetch'; l.href = `${n}.html`; document.head.append(l); }));
   $('.page-close', shell).addEventListener('click', () => close());
   shell.addEventListener('click', (e) => { if (e.target === shell) close(); });
   // Fetch a page as soon as someone reaches for its link, so it opens straight away.
@@ -326,6 +343,7 @@ function initPageModal() {
   });
   addEventListener('message', (e) => {
     if (e.origin !== location.origin) return;
+    if (e.data?.abh === 'ready') pageReady();
     if (e.data?.abh === 'close') close(false, e.data.hash);
     if (e.data?.abh === 'bag') { bag.items = store.get('abh-bag', []); openBag(); }
   });
@@ -350,8 +368,7 @@ function initHome() {
 
   $('[data-latest]').innerHTML = EPISODES.slice(0, 3).map(epCard).join('');
   bindPlay($('[data-latest]')); bindYT($('[data-latest]'));
-  $('[data-shop-strip]').innerHTML = PRODUCTS.map((p) => `<article class="strip-item reveal" data-from="pop" style="background:${p.color}"><a href="shop.html#${p.id}"><img src="${p.img}" alt="${esc(p.alt)}" width="800" height="800" decoding="async"></a><span class="price-tag">${money(p.price)}</span><div class="strip-info"><h3>${p.name}</h3><button class="btn btn-small" type="button" ${p.sizes ? `data-go="shop.html#${p.id}"` : `data-add="${p.id}"`}><span>${p.sizes ? 'Choose size' : 'Add to bag'}</span></button></div></article>`).join('');
-  $$('[data-go]').forEach((b) => b.addEventListener('click', () => { location.href = b.dataset.go; }));
+  $('[data-shop-strip]').innerHTML = PRODUCTS.map((p) => `<article class="strip-item reveal" data-from="pop" style="background:${p.color}"><a href="shop.html#${p.id}"><img src="${p.img}" alt="${esc(p.alt)}" width="800" height="800" decoding="async"></a><span class="price-tag">${money(p.price)}</span><div class="strip-info"><h3>${p.name}</h3>${p.sizes ? `<a class="btn btn-small" href="shop.html#${p.id}"><span>Choose size</span></a>` : `<button class="btn btn-small" type="button" data-add="${p.id}"><span>Add to bag</span></button>`}</div></article>`).join('');
 
   // Mantra
   const now = new Date();
@@ -390,7 +407,7 @@ function initHome() {
 
   // The hero's story walks on its own, and your scrolling makes her hurry, like the hills below.
   if (!reduced) {
-    const STORY = new Set(['lx', 'ly', 'suit', 'free', 'gownfly', 'wigfly', 'wigspin', 'casefly', 'paper', 'dogrun', 'beltcase']);
+    const STORY = new Set(['lx', 'ly', 'suit', 'free', 'gownfly', 'wigfly', 'wigspin', 'casefly', 'paper', 'dogrun', 'beltcase', 'phone-camera']);
     const storyAnims = () => hero.getAnimations({ subtree: true }).filter((a) => STORY.has(a.animationName));
     let lastY = scrollY, rate = 1, raf = 0;
     const tick = () => {
@@ -742,4 +759,24 @@ function paintFrames() {
     }), { rootMargin: '-25% 0px -65% 0px' });
     $$('.legal-card').forEach((c) => spy.observe(c));
   }
+}
+
+// Tell the modal this page is ready to show.
+if (embedded) parent.postMessage({ abh: 'ready' }, location.origin);
+
+// ----- Phones: the footer's lists fold away, and open one at a time -----
+{
+  const heads = $$('.foot nav h4');
+  heads.forEach((h) => {
+    h.tabIndex = 0;
+    h.setAttribute('role', 'button');
+    h.setAttribute('aria-expanded', 'false');
+    const toggle = () => {
+      const open = !h.parentElement.classList.contains('fold-open');
+      heads.forEach((x) => { x.parentElement.classList.remove('fold-open'); x.setAttribute('aria-expanded', 'false'); });
+      if (open) { h.parentElement.classList.add('fold-open'); h.setAttribute('aria-expanded', 'true'); }
+    };
+    h.addEventListener('click', toggle);
+    h.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+  });
 }
