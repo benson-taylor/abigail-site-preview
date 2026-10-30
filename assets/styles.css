@@ -1298,5 +1298,5 @@ html:has(body.home){scrollbar-gutter:stable}
 }
 
 /* About: the photo sits beside the words rather than filling the screen */
-.story-pic{width:min(68%,62svh);height:auto;aspect-ratio:850/880;margin:96px 0 24px}
+.story-pic{width:min(76%,70svh);height:auto;aspect-ratio:850/880;margin:96px 0 24px}
 @media (max-width:980px){.story-pic{width:min(70%,340px);height:auto;margin:84px auto 0}}
