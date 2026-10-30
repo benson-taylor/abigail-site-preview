@@ -1462,32 +1462,36 @@ html.embed,html.embed body{overscroll-behavior:contain}
 }
 @media (max-width:640px){.sunbutton{flex:none;aspect-ratio:1;padding:0}.sun-face{width:66%;height:66%;aspect-ratio:1}}
 
-/* Short phones only: each section still fits one screen */
-@media (max-width:640px) and (max-height:760px){
-  .home .story{display:block;padding:0}
-  .story-pic{float:left;width:36vw;margin:calc(var(--nav-h) + 12px) 14px 8px 16px}
-  .story-copy{padding:calc(var(--nav-h) + 12px) 16px 20px}
-  .story-copy h2{font-size:clamp(1.45rem,7vw,1.8rem)}
-  .story-copy p.story-key{font-size:1rem;clear:both;padding-top:6px}
-  .story-btns{clear:both}
-  .story-btns .btn{padding:.7em 1.1em;font-size:.92rem}
 
-  .morning-inner{display:grid;grid-template-columns:1fr auto;gap:4px 12px;text-align:left;align-items:center}
-  .morning-inner .eyebrow{grid-column:1/-1;justify-self:start;margin:0 0 4px}
-  .morning-inner h2{grid-column:1;margin:0;font-size:clamp(1.6rem,7.6vw,2rem)}
-  .sunbutton{grid-column:2;grid-row:2;width:92px;height:92px;margin:0}
-  .sun-face{font-size:.68rem;box-shadow:0 0 0 8px rgba(255,209,92,.28),0 0 0 15px rgba(255,209,92,.14)}
-  .morning-sub{grid-column:1/-1;font-size:.92rem;line-height:1.35;margin:6px 0 0}
-  .mantra{grid-column:1/-1}
-  .morning-grid{gap:12px}
-  .daily-card{padding:14px}
-  .daily-card h3{font-size:1.35rem}
-  .daily-card .signup{margin:.5em 0}
+/* Phone About: a big photo, then the words, filling the screen with nothing floating in space */
+@media (max-width:640px){
+  .home .story{display:flex;flex-direction:column;justify-content:center;gap:0;min-height:100svh;padding:calc(var(--nav-h) + 14px) 0 18px;box-sizing:border-box}
+  .story-pic{width:min(70vw,42svh);margin:0 auto}
+  .story-copy{padding:18px 20px 0}
+  .story-copy .eyebrow{margin-bottom:8px}
+  .story-copy h2{font-size:clamp(1.8rem,8.4vw,2.5rem);margin-bottom:.35em}
+  .story-copy p.story-key{font-size:clamp(1.05rem,4.6vw,1.25rem);line-height:1.28;margin-bottom:.7em}
+  .story-btns{flex-wrap:nowrap;gap:10px}
+  .story-btns .btn{flex:1;justify-content:center;text-align:center;padding:.85em .6em;font-size:.98rem;white-space:nowrap}
 
-  .members-copy p:not(.eyebrow){display:none}
-  .members-copy h2{margin-bottom:.3em}
-  .rr-sign{width:min(62%,230px)}
-  .rr-win{width:72%}
-  .rr-wall{padding-bottom:30px}
+  /* Phone Morning: the first screen is the big sun, in the middle. The love note follows as you scroll. */
+  .home .morning{padding-bottom:30px}
+  .morning-grid{display:block}
+  .morning-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:calc(100svh - var(--nav-h) - 28px);box-sizing:border-box;padding-bottom:14px}
+  .morning-inner .eyebrow{margin:0 0 10px}
+  .morning-inner h2{font-size:clamp(1.9rem,8.6vw,2.6rem);line-height:1.05;margin:0 0 .3em}
+  .morning-sub{font-size:1rem;line-height:1.4;max-width:30ch;margin:0}
+  .sunbutton{flex:none;width:min(66vw,40svh);height:min(66vw,40svh);margin:clamp(26px,5svh,44px) 0;font-size:clamp(1.3rem,6vw,1.7rem)}
+  .sun-face{width:72%;height:72%;font-size:inherit;line-height:1.1;box-shadow:0 0 0 clamp(12px,3.4vw,18px) rgba(255,209,92,.3),0 0 0 clamp(24px,6.8vw,36px) rgba(255,209,92,.15)}
+  .sunbutton.small{width:96px;height:96px;margin:16px 0;font-size:.8rem}
+  .mantra{width:100%}
+  .daily-card{margin-top:6px}
 }
-@media (max-width:640px) and (max-height:760px){.story-copy h2{display:flow-root}}
+/* The smallest phones: the Reading Room's sign and windows say what's inside */
+@media (max-width:380px){.members-copy p:not(.eyebrow){display:none}}
+
+/* The plane waits for her: it comes in once she's landed, on the same clock as her story */
+.tow{animation:tow 26s linear infinite}
+@keyframes tow{0%,57%{transform:translateX(-1500px)}100%{transform:translateX(2100px)}}
+@media (max-width:640px){.story-pic{width:min(66vw,34svh)}}
+@media (prefers-reduced-motion:reduce){.tow{animation:none;transform:translateX(375px)}}

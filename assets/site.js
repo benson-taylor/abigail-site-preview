@@ -410,7 +410,7 @@ function initHome() {
 
   // The hero's story walks on its own, and your scrolling makes her hurry, like the hills below.
   if (!reduced) {
-    const STORY = new Set(['lx', 'ly', 'suit', 'free', 'gownfly', 'wigfly', 'wigspin', 'casefly', 'paper', 'dogrun', 'beltcase', 'phone-camera']);
+    const STORY = new Set(['lx', 'ly', 'suit', 'free', 'gownfly', 'wigfly', 'wigspin', 'casefly', 'paper', 'dogrun', 'beltcase', 'phone-camera', 'tow']);
     const storyAnims = () => hero.getAnimations({ subtree: true }).filter((a) => STORY.has(a.animationName));
     // Phones skip the wait: the film opens with her already on the belt, moments from jumping.
     if (matchMedia('(max-width:640px)').matches) storyAnims().forEach((an) => { an.currentTime = (an.currentTime || 0) + 8800; });
