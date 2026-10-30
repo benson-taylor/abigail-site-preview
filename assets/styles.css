@@ -1385,10 +1385,9 @@ html.embed,html.embed body{overscroll-behavior:contain}
   .foot-pay{margin-top:6px}
 }
 @keyframes phone-camera{
-  0%{transform:translateX(calc(-49% + 50vw))}
-  26%{transform:translateX(calc(-49% + 50vw))}
-  38%,50%{transform:translateX(0)}
-  60%{transform:translateX(calc(-36% + 50vw))}
+  0%,18%{transform:translateX(calc(-49% + 50vw))}
+  28%,47%{transform:translateX(0)}
+  53%{transform:translateX(calc(-36% + 50vw))}
   90%{transform:translateX(calc(-62% + 50vw))}
   100%{transform:translateX(calc(-49% + 50vw))}
 }
