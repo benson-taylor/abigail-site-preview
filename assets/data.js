@@ -14,16 +14,15 @@ window.THEMES = ['Academics', 'Music', 'Art', 'Fashion', 'Love', 'Life'];
 // When an episode is recorded, add `audio`, a `date`, optionally `youtubeId`, and remove `planned`.
 window.EPISODES = [
   { id: 'tracey', photo: 'assets/img/guests/tracey.jpg', credit: 'Photo: Cyrus Mower, CC BY-SA 4.0', n: 6, planned: true, title: 'What pain teaches us about being human', guest: 'Professor Irene Tracey', role: 'University of Oxford', theme: 'Academics', color: '#FFD15C', blurb: 'A neuroscientist who has spent her career studying how the brain creates the experience of pain, and how belief and attention can change it.' },
-  { id: 'scott', photo: 'assets/img/guests/scott.jpg', credit: 'Photo: LondonSpalling, CC0', n: 5, planned: true, title: 'The serious science of laughing together', guest: 'Professor Sophie Scott', role: 'University College London', theme: 'Love', color: '#D81F5F', blurb: 'What a neuroscientist of voice and laughter has learned about why we laugh, and what it does for the people we love.' },
   { id: 'fredrickson', photo: 'assets/img/guests/fredrickson.jpg', credit: 'Photo: Gabriella Clare Marino, CC BY-SA 4.0', n: 4, planned: true, title: 'Do good feelings build a good life?', guest: 'Professor Barbara Fredrickson', role: 'University of North Carolina', theme: 'Life', color: '#FF9A62', blurb: 'A psychologist of positive emotions on what joy and connection build in us over time.' },
   { id: 'blakemore', photo: 'assets/img/guests/blakemore.jpg', credit: 'Photo: Shamus O’Reilly, CC BY 2.0', n: 3, planned: true, title: 'How the teenage years make us who we are', guest: 'Professor Sarah-Jayne Blakemore', role: 'University of Cambridge', theme: 'Life', color: '#8FDCCB', blurb: 'A neuroscientist of the adolescent brain on the years that shape who we become, and why they deserve more respect.' },
   { id: 'beard', photo: 'assets/img/guests/beard.jpg', credit: 'Photo: UC3M, CC BY 3.0', n: 2, planned: true, title: 'What the ancient world can tell us about living well', guest: 'Professor Mary Beard', role: 'University of Cambridge', theme: 'Academics', color: '#BDA5F4', blurb: 'A classicist on what the Romans can and can’t teach us about how to live now.' },
-  { id: 'ep01', n: 1, title: 'Jumping off the conveyor belt', guest: '', role: 'Abigail, solo', theme: 'Life', date: 'Sample audio', secs: 27, color: '#FF9FB8', blurb: 'Abigail on leaving the law, and the one question she’s been asking ever since.', audio: 'assets/audio/ep01.mp3', youtubeId: '' },
+  { id: 'ep01', n: 1, title: 'Jumping off the conveyor belt', guest: '', role: 'Abigail, solo', theme: 'Life', planned: true, color: '#FF9FB8', blurb: 'Abigail on leaving the law, and the one question she’s been asking ever since.', youtubeId: '' },
 ];
 
-// Member-only samples use the same audio for now.
+// Member-only extras. Add `audio` and `secs` once each is recorded.
 window.BONUS = [
-  { title: 'Members’ Q&A: how do you actually leave?', audio: 'assets/audio/ep01.mp3', secs: 27 },
+  { title: 'Members’ Q&A: how do you actually leave?' },
 ];
 window.READING = [
   { book: 'The reading list goes here', note: 'Abigail’s real picks, with her notes, replace this sample.' },
