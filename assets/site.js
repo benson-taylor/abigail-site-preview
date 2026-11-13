@@ -19,11 +19,11 @@ const home = document.body.classList.contains('home');
 if (!home && !embedded) location.replace(`./?m=${encodeURIComponent(location.pathname.split('/').pop().replace(/(\.html)?$/, '.html') + location.search + location.hash)}`);
 $('[data-nav]').outerHTML = `<header class="nav">
   <a class="logo" href="index.html"><img src="assets/logo/logo-stacked-dark.svg" alt="A Brighter Humanity, home" width="1000" height="300"></a>
-  <a class="nav-login" href="agent.html">Log in</a>
+  <a class="nav-login" href="collaborator.html">Log in</a>
   <a class="btn btn-small nav-btn" href="podcast.html"><span class="lg">Listen now</span><span class="sm">Listen</span></a>
   <a class="btn btn-small btn-rose nav-btn" href="index.html#morning"><span class="lg">Today’s mantra, please</span><span class="sm">Mantra</span></a>
   <button class="bag-btn" type="button" data-open-bag aria-label="Open your bag"><svg class="bag-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 8h14l1 13H4zM9 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span class="bag-word">Bag</span><b class="bag-count" data-bag-count>0</b></button>
-  <div class="post"><button class="post-btn" type="button" aria-expanded="false" aria-controls="post-menu" aria-label="Menu"><svg viewBox="0 0 28 28" width="24" height="24" aria-hidden="true"><path d="M14 3v23" stroke="#8A4B24" stroke-width="3" stroke-linecap="round"/><path d="M6 6h13l4 3.5-4 3.5H6z" fill="#D81F5F"/><path d="M22 14H9l-4 3.5L9 21h13z" fill="#FFD15C"/></svg></button><nav class="post-menu" id="post-menu" aria-label="Main">${[...NAV, ['Sign in', 'account.html'], ['Log in', 'agent.html'], ['Today’s mantra', 'index.html#morning']].map(([t, u], i) => `<a href="${u}" style="--i:${i}">${t}</a>`).join('')}</nav></div>
+  <div class="post"><button class="post-btn" type="button" aria-expanded="false" aria-controls="post-menu" aria-label="Menu"><svg viewBox="0 0 28 28" width="24" height="24" aria-hidden="true"><path d="M14 3v23" stroke="#8A4B24" stroke-width="3" stroke-linecap="round"/><path d="M6 6h13l4 3.5-4 3.5H6z" fill="#D81F5F"/><path d="M22 14H9l-4 3.5L9 21h13z" fill="#FFD15C"/></svg></button><nav class="post-menu" id="post-menu" aria-label="Main">${[...NAV, ['Sign in', 'account.html'], ['Log in', 'collaborator.html'], ['Today’s mantra', 'index.html#morning']].map(([t, u], i) => `<a href="${u}" style="--i:${i}">${t}</a>`).join('')}</nav></div>
 </header>
 <aside class="drawer" data-bag hidden aria-label="Your bag"></aside><div class="scrim" data-scrim hidden></div>`;
 
@@ -385,7 +385,7 @@ function initHome() {
   sun.addEventListener('click', () => { box.hidden = false; sun.setAttribute('aria-expanded', 'true'); sun.classList.add('small'); show(); });
   $('[data-another]').addEventListener('click', () => { i = (i + 1) % MANTRAS.length; show(); });
   $('[data-share]').addEventListener('click', async () => {
-    const text = `“${MANTRAS[i]}” — The Morning Mantra, A Brighter Humanity`;
+    const text = `“${MANTRAS[i]}” (The Morning Mantra, A Brighter Humanity)`;
     try { if (navigator.share) await navigator.share({ text, url: location.href.split('#')[0] }); else { await navigator.clipboard.writeText(text); toast('Copied. Go and make her morning.'); } } catch (err) { if (err.name !== 'AbortError') toast('That didn’t work, sorry.'); }
   });
 

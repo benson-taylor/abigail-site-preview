@@ -687,7 +687,7 @@ h2 em,h1 em,h3 em{font-family:var(--serif);font-weight:500;letter-spacing:-.01em
 /* ---------- Bag: same size as the buttons beside it, one count badge ---------- */
 .bag-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 10px 0 18px;border:0;border-radius:999px;background:var(--ivory);color:var(--night);font:700 .92rem/1 var(--sans);cursor:pointer;transition:transform 180ms var(--ease-out)}
 .bag-btn:active{transform:scale(.97)}
-/* Log in: a light pill like the bag, for the private agent page */
+/* Log in: a light pill like the bag, for the private collaborator page */
 .nav-login{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;margin-left:auto;border-radius:999px;background:var(--ivory);color:var(--night);font:700 .92rem/1 var(--sans);text-decoration:none;white-space:nowrap;transition:transform 180ms var(--ease-out)}
 .nav-login:active{transform:scale(.97)}
 @media (hover:hover) and (pointer:fine){.nav-login:hover{transform:translateY(-2px)}.nav-login:active{transform:scale(.97)}}
